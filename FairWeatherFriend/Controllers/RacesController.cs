@@ -57,7 +57,7 @@ namespace FairWeatherFriend.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TimeOfDay,isCancelled,Prize,RaceTrackId")] Race race)
+        public async Task<IActionResult> Create([Bind("Id,TimeOfDay,isCancelled,Prize,RaceTrackId,Name,Laps")] Race race)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace FairWeatherFriend.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TimeOfDay,isCancelled,Prize,RaceTrackId")] Race race)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TimeOfDay,isCancelled,Prize,RaceTrackId,Name,Laps")] Race race)
         {
             if (id != race.Id)
             {
