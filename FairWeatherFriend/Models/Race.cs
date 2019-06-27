@@ -8,8 +8,11 @@ namespace FairWeatherFriend.Models
 {
     public class Race
     {
+        public int Id { get; set; }
         [Required]
+        [Display(Name = "Date")]
         public DateTime TimeOfDay { get; set; }
+        [Display(Name = "Cancelled")]
         public bool isCancelled { get; set; }
         public int Prize { get; set; }
         [Required]
