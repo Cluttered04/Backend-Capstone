@@ -4,6 +4,13 @@
     ViewData["Title"] = "Details";
 }
 
+@using Microsoft.AspNetCore.Identity
+@using FairWeatherFriend.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+
 <h1>Details</h1>
 
 <div>
@@ -60,6 +67,10 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    @if (SignInManager.IsSignedIn(User) && @UserManager.GetUserAsync(User).Result.isAdmin == true)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    }
+
     <a asp-action="Index">Back to List</a>
 </div>
