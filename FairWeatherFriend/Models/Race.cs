@@ -12,6 +12,10 @@ namespace FairWeatherFriend.Models
         [Required]
         [Display(Name = "Date")]
         public DateTime TimeOfDay { get; set; }
+        public string DateOnly { get
+            {
+                return TimeOfDay.ToShortDateString().ToString();
+            } set { } }
         [Display(Name = "Cancelled")]
         public bool isCancelled { get; set; }
         public int Prize { get; set; }
