@@ -18,6 +18,11 @@
         <a asp-action="Create">Create New</a>
     </p>
 }
+
+<form>
+    <input type="text" name="searchQuery" />
+    <button type="submit">Search by Track Name</button>
+</form>
 <table class="table">
     <thead>
         <tr>
@@ -95,3 +100,5 @@
         }
     </tbody>
 </table>
+
+<a asp-action="PastRaces">View Past Races</a>
