@@ -54,6 +54,15 @@
 
         <script type="text/javascript">
 
+            currentDate = new Date()
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+
+            today = mm + '/' + dd + '/' + yyyy;
+            const notStringifiedDate = @Html.Raw(Model.DateOnly)
+
             const formatDate = (date) => {
                 const datePartsArray = date.split("/");
                 const dayOfDate = (('0' + datePartsArray[1]).slice(-2));
@@ -63,25 +72,45 @@
                 return formattedDate;
             }
 
-            const date = "@Html.Raw(Model.DateOnly)";
-            console.log(typeof (date));
-            const formattedDate = formatDate(date);
+            const dateDifference = (str1, str2) => { return Math.floor((Date.parse(str2) - Date.parse(str1)) / 86400000) }; 
 
-            fetch(`https://api.openweathermap.org/data/2.5/forecast?zip=${@Html.Raw(Model.Track.ZipCode)},us&appid=19a77daddda7c801c5cb29c3f03812e2`)
+            const date = "@Html.Raw(Model.DateOnly)";
+            if (date == currentDate) {
+                fetch(`https://api.openweathermap.org/data/2.5/weather?zip=${@Html.Raw(Model.Track.ZipCode)},us&appid=19a77daddda7c801c5cb29c3f03812e2`)
+                    .then(r => r.json())
+                    .then(parsedForecast => {
+                        const currentWeatherMain = parsedForecast.weather[0].main
+                        const currentWeatherDescription = parsedForecast.weather[0].description
+                        var mainstring = `<p>${currentWeatherMain}</p><p>${currentWeatherDescription}</p>`
+                        console.log(mainstring);
+                        console.log(parsedForecast);
+                        console.log(currentDate);
+                        console.log(date);
+                        document.querySelector("#forecast").innerHTML = mainstring;
+                    })
+            } else if (dateDifference(date, currentDate > 10)) {
+                const mainstring = ``;
+                document.querySelector("#forecast").innerHTML = mainstring;
+            } else {
+                fetch(`https://api.openweathermap.org/data/2.5/forecast?zip=${@Html.Raw(Model.Track.ZipCode)},us&appid=19a77daddda7c801c5cb29c3f03812e2`)
                 .then(r => r.json())
                 .then(parsedForecast => {
                     const forecastArray = parsedForecast.list;
                     const dateMatch = forecastArray.find(f => {
                       return  f.dt_txt === formattedDate
                             })
-                    console.log(dateMatch)
                     const main = dateMatch.weather[0].main;
                     const description = dateMatch.weather[0].description;
 
-                    var mainstring = '<p>' + main + '</p>' + '<p>' + description + '</p>';
-                    console.log(mainstring);
+                    const mainstring = '<p>' + main + '</p>' + '<p>' + description + '</p>';
                     document.querySelector("#forecast").innerHTML = mainstring;
                 })
+            }
+
+            
+            const formattedDate = formatDate(date);
+
+            
 
 
         </script>
