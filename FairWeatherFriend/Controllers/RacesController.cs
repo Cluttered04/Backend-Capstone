@@ -75,7 +75,7 @@ namespace FairWeatherFriend.Controllers
         // GET: Races/Create
         public IActionResult Create()
         {
-            ViewData["RaceTrackId"] = new SelectList(_context.RaceTrack, "Id", "Location");
+            ViewData["RaceTrackId"] = new SelectList(_context.RaceTrack, "Id", "Name");
             return View();
         }
 
