@@ -14,16 +14,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TimeOfDay)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Prize)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Laps)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeOfDay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Prize)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Track)
@@ -34,43 +34,55 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TimeOfDay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Prize)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Laps)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Track.Name)
-            </td>
-            @if (item.isCancelled == true)
-            {
+        @foreach (var item in Model)
+        {
+            <tr>
+                @if (item.isCancelled == true)
+                {
+                    <td class="Cancelled">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                }
+
 
                 <td>
-                    Cancelled
+                    @Html.DisplayFor(modelItem => item.Laps)
                 </td>
-            }
-            else
-            {
                 <td>
-                    Race still on
+                    @Html.DisplayFor(modelItem => item.TimeOfDay)
                 </td>
-            }
-            <td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Prize)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Track.Name)
+                </td>
+                @if (item.isCancelled == true)
+                {
 
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <td class="Cancelled">
+                        Cancelled
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        Race Complete
+                    </td>
+                }
+                <td>
 
-            </td>
-        </tr>
-}
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 

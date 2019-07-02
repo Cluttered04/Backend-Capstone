@@ -50,16 +50,25 @@
         @foreach (var item in Model)
         {
         <tr>
-            <td>
+            @if(item.isCancelled == true)
+            {
+            <td class="Cancelled">
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
+            } else
+            {
+        <td>
+                @Html.DisplayFor(modelItem => item.Name)
+        </td>
+            }
+
+            
             <td>
                 @Html.DisplayFor(modelItem => item.Laps)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TimeOfDay)
             </td>
-            @*<td>@Html.DisplayFor(modelItem => item.isCancelled)</td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Prize)
             </td>
@@ -69,7 +78,7 @@
             @if (item.isCancelled == true)
             {
 
-                <td>
+                <td class="Cancelled">
                     Cancelled
                 </td>
             }

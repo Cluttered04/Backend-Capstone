@@ -35,6 +35,9 @@ namespace FairWeatherFriend.Controllers
 
             var raceTrack = await _context.RaceTrack.Include(r => r.Races)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+
+
             if (raceTrack == null)
             {
                 return NotFound();
