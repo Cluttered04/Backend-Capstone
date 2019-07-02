@@ -5,14 +5,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using FairWeatherFriend.Models;
+using FairWeatherFriend.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace FairWeatherFriend.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+        public HomeController(ApplicationDbContext context)
         {
-            return View();
+            _context = context;
+        }
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.RaceTrack.ToListAsync());
         }
 
         public IActionResult Privacy()
