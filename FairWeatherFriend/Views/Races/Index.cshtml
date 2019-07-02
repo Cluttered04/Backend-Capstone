@@ -18,6 +18,11 @@
         <a asp-action="Create">Create New</a>
     </p>
 }
+
+<form>
+    <input type="text" name="searchQuery" />
+    <button type="submit">Search by Track Name</button>
+</form>
 <table class="table">
     <thead>
         <tr>
@@ -31,67 +36,77 @@
                 @Html.DisplayNameFor(model => model.TimeOfDay)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.isCancelled)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Prize)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Track)
             </th>
-            <th></th>
+            <th>
+                Status
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Laps)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TimeOfDay)
-                </td>
-                <td>@Html.DisplayFor(modelItem => item.isCancelled)</td>
-                @*@if (item.isCancelled == true)
-                    {
+        <tr>
+            @if(item.isCancelled == true)
+            {
+            <td class="Cancelled">
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            } else
+            {
+        <td>
+                @Html.DisplayFor(modelItem => item.Name)
+        </td>
+            }
 
-                        <dd class="col-sm-10">
-                            Cancelled
-                        </dd>
-                    }
-                    else
-                    {
-                        <dd class="col-sm-10">
-                            Race still on
-                        </dd>
-                    }*@
-                <td>
-                    @Html.DisplayFor(modelItem => item.Prize)
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Laps)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeOfDay)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Prize)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Track.Name)
+            </td>
+            @if (item.isCancelled == true)
+            {
+
+                <td class="Cancelled">
+                    Cancelled
                 </td>
+            }
+            else
+            {
                 <td>
-                    @Html.DisplayFor(modelItem => item.Track.Name)
+                    Race still on
                 </td>
-                <td>
-                    @if (SignInManager.IsSignedIn(User) && @UserManager.GetUserAsync(User).Result.isAdmin == true)
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+            }
+            <td>
+                @if (SignInManager.IsSignedIn(User) && @UserManager.GetUserAsync(User).Result.isAdmin == true)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
 
 
-                    }
-                    @if (SignInManager.IsSignedIn(User) && @UserManager.GetUserAsync(User).Result.isAdmin == true)
-                    {
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    }
+                }
+                @if (SignInManager.IsSignedIn(User) && @UserManager.GetUserAsync(User).Result.isAdmin == true)
+                {
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                }
 
 
 
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
-                </td>
-            </tr>
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
+
+<a asp-action="PastRaces">View Past Races</a>

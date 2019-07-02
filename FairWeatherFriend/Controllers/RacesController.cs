@@ -20,9 +20,36 @@ namespace FairWeatherFriend.Controllers
         }
 
         // GET: Races
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchQuery)
         {
-            var applicationDbContext = _context.Race.Include(r => r.Track);
+            DateTime currentDate = DateTime.Now;
+            var applicationDbContext = _context.Race.Include(r => r.Track).Where(r => DateTime.Compare(r.TimeOfDay, currentDate) > 0);
+
+            if(searchQuery != null)
+            {
+                string normalizedSearchQuery = searchQuery.ToLower();
+                applicationDbContext = applicationDbContext.Where(r => r.Track.Name.ToLower().Contains(normalizedSearchQuery));
+                
+            }
+
+            applicationDbContext = applicationDbContext.OrderBy(r => r.TimeOfDay);
+            return View(await applicationDbContext.ToListAsync());
+
+
+        }
+
+        public async Task<IActionResult> PastRaces(string searchQuery)
+        {
+            DateTime currentDate = DateTime.Now;
+            var applicationDbContext = _context.Race.Include(r => r.Track).Where(r => DateTime.Compare(r.TimeOfDay, currentDate) < 0);
+            if (searchQuery != null)
+            {
+                string normalizedSearchQuery = searchQuery.ToLower();
+                applicationDbContext = applicationDbContext.Where(r => r.Track.Name.ToLower().Contains(normalizedSearchQuery));
+
+            } 
+
+            applicationDbContext = applicationDbContext.OrderByDescending(r => r.TimeOfDay);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -48,7 +75,7 @@ namespace FairWeatherFriend.Controllers
         // GET: Races/Create
         public IActionResult Create()
         {
-            ViewData["RaceTrackId"] = new SelectList(_context.RaceTrack, "Id", "Location");
+            ViewData["RaceTrackId"] = new SelectList(_context.RaceTrack, "Id", "Name");
             return View();
         }
 
