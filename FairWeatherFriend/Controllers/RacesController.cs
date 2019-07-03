@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FairWeatherFriend.Data;
 using FairWeatherFriend.Models;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace FairWeatherFriend.Controllers
 {
@@ -143,6 +145,26 @@ namespace FairWeatherFriend.Controllers
                         throw;
                     }
                 }
+
+                if(race.isCancelled == true)
+                {
+
+                    SMSInformation twilio = new SMSInformation()
+                    {
+                        userPhone = "7076885957"
+                    };
+                    string accountSid = twilio.sid;
+                    string authToken = twilio.token;
+
+                    TwilioClient.Init(accountSid, authToken);
+
+                    var message = MessageResource.Create(
+                        body: "Join Earth's mightiest heroes. Like Kevin Bacon.",
+                        from: new Twilio.Types.PhoneNumber(twilio.phone),
+                        to: new Twilio.Types.PhoneNumber(twilio.userPhone)
+                    );
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["RaceTrackId"] = new SelectList(_context.RaceTrack, "Id", "Location", race.RaceTrackId);
