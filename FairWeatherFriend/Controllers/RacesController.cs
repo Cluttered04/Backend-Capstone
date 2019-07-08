@@ -9,6 +9,7 @@ using FairWeatherFriend.Data;
 using FairWeatherFriend.Models;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
+using Microsoft.AspNetCore.Identity;
 
 namespace FairWeatherFriend.Controllers
 {
@@ -16,10 +17,16 @@ namespace FairWeatherFriend.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public RacesController(ApplicationDbContext context)
+
+        private readonly UserManager<ApplicationUser> _userManager;
+        public RacesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Races
         public async Task<IActionResult> Index(string searchQuery)
@@ -70,6 +77,15 @@ namespace FairWeatherFriend.Controllers
             {
                 return NotFound();
             }
+
+            var raceWithOptInUsers = await _context.Race
+        .Include(r => r.FavoriteRaces)
+        .FirstOrDefaultAsync(m => m.Id == id);
+
+            //var raceUsers = raceWithOptInUsers.FavoriteRaces;
+            //var user = await GetCurrentUserAsync();
+            //var breakpoint = raceUsers.Where(r => r.UserId == user.Id).Where(r => r.RaceId == race.Id);
+            //var count = breakpoint.Count();
 
             return View(race);
         }
@@ -148,18 +164,31 @@ namespace FairWeatherFriend.Controllers
 
                 if(race.isCancelled == true)
                 {
+                    var raceWithOptInUsers = await _context.Race
+                    .Include(r => r.FavoriteRaces)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
+                    var raceUsers = raceWithOptInUsers.FavoriteRaces;
+
+
+                    var user = await GetCurrentUserAsync();
+
+                    var breakpoint = raceUsers.Where(r => r.UserId == user.Id).Where(r => r.RaceId == race.Id);
+
+
 
                     SMSInformation twilio = new SMSInformation()
                     {
-                        userPhone = "7076885957"
+                        userPhone = user.PhoneNumber
                     };
+
                     string accountSid = twilio.sid;
                     string authToken = twilio.token;
 
                     TwilioClient.Init(accountSid, authToken);
 
                     var message = MessageResource.Create(
-                        body: "Join Earth's mightiest heroes. Like Kevin Bacon.",
+                        body: "Your race has been cancelled",
                         from: new Twilio.Types.PhoneNumber(twilio.phone),
                         to: new Twilio.Types.PhoneNumber(twilio.userPhone)
                     );
@@ -199,6 +228,32 @@ namespace FairWeatherFriend.Controllers
             _context.Race.Remove(race);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> OptInNotification(int id)
+        {
+            var race = await _context.Race
+                .Include(r => r.Track)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var user = await GetCurrentUserAsync();
+
+            FavoriteRaces favoriteRace = new FavoriteRaces()
+            {
+                UserId = user.Id,
+                RaceId = id
+            };
+
+            _context.Update(favoriteRace);
+            await _context.SaveChangesAsync();
+
+            return View(race);
+
+
+
+
+            
+
         }
 
         private bool RaceExists(int id)
