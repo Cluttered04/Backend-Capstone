@@ -189,7 +189,7 @@ namespace FairWeatherFriend.Controllers
                         TwilioClient.Init(accountSid, authToken);
 
                         var message = MessageResource.Create(
-                            body: "Your race has been cancelled",
+                            body: $"{race.Name} on {race.TimeOfDay} has been cancelled.",
                             from: new Twilio.Types.PhoneNumber(twilio.phone),
                             to: new Twilio.Types.PhoneNumber(twilio.userPhone)
 
