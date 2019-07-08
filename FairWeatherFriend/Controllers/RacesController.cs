@@ -82,10 +82,6 @@ namespace FairWeatherFriend.Controllers
         .Include(r => r.FavoriteRaces)
         .FirstOrDefaultAsync(m => m.Id == id);
 
-            //var raceUsers = raceWithOptInUsers.FavoriteRaces;
-            //var user = await GetCurrentUserAsync();
-            //var breakpoint = raceUsers.Where(r => r.UserId == user.Id).Where(r => r.RaceId == race.Id);
-            //var count = breakpoint.Count();
 
             return View(race);
         }
@@ -162,36 +158,43 @@ namespace FairWeatherFriend.Controllers
                     }
                 }
 
-                if(race.isCancelled == true)
+                if (race.isCancelled == true)
                 {
                     var raceWithOptInUsers = await _context.Race
-                    .Include(r => r.FavoriteRaces)
+                    .Include(r => r.FavoriteRaces).Include(r => r.FavoriteRaces)
                     .FirstOrDefaultAsync(m => m.Id == id);
 
-                    var raceUsers = raceWithOptInUsers.FavoriteRaces;
 
+                    List<ApplicationUser> usersToNotify = new List<ApplicationUser>();
 
-                    var user = await GetCurrentUserAsync();
-
-                    var breakpoint = raceUsers.Where(r => r.UserId == user.Id).Where(r => r.RaceId == race.Id);
-
-
-
-                    SMSInformation twilio = new SMSInformation()
+                    foreach (FavoriteRaces singleRace in raceWithOptInUsers.FavoriteRaces)
                     {
-                        userPhone = user.PhoneNumber
-                    };
+                        singleRace.User = await _context.ApplicationUsers.FindAsync(singleRace.UserId);
+                        usersToNotify.Add(singleRace.User);
 
-                    string accountSid = twilio.sid;
-                    string authToken = twilio.token;
+                        
+                    }
 
-                    TwilioClient.Init(accountSid, authToken);
 
-                    var message = MessageResource.Create(
-                        body: "Your race has been cancelled",
-                        from: new Twilio.Types.PhoneNumber(twilio.phone),
-                        to: new Twilio.Types.PhoneNumber(twilio.userPhone)
+                    foreach (ApplicationUser user in usersToNotify)
+                    {
+                        SMSInformation twilio = new SMSInformation()
+                        {
+                            userPhone = user.PhoneNumber
+                        };
+
+                        string accountSid = twilio.sid;
+                        string authToken = twilio.token;
+
+                        TwilioClient.Init(accountSid, authToken);
+
+                        var message = MessageResource.Create(
+                            body: "Your race has been cancelled",
+                            from: new Twilio.Types.PhoneNumber(twilio.phone),
+                            to: new Twilio.Types.PhoneNumber(twilio.userPhone)
+
                     );
+                    }
                 }
 
                 return RedirectToAction(nameof(Index));
