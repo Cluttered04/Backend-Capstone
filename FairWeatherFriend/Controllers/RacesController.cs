@@ -161,7 +161,7 @@ namespace FairWeatherFriend.Controllers
                 if (race.isCancelled == true)
                 {
                     var raceWithOptInUsers = await _context.Race
-                    .Include(r => r.FavoriteRaces).Include(r => r.FavoriteRaces)
+                    .Include(r => r.FavoriteRaces)
                     .FirstOrDefaultAsync(m => m.Id == id);
 
 
