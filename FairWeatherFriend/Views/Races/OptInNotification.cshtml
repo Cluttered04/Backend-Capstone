@@ -1,17 +1,10 @@
 ﻿@model FairWeatherFriend.Models.Race
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "OptInNotification";
 }
 
-@using Microsoft.AspNetCore.Identity
-@using FairWeatherFriend.Models
-
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
-
-
-<h1>Details</h1>
+<h3>You have opted in to notifications for this race!</h3>
 
 <div>
     <h4>Race</h4>
@@ -146,33 +139,6 @@
     </dt>
     <dd class="col-sm-2" id="forecast"></dd>
 </div>
-
-
-
-@if (SignInManager.IsSignedIn(User) && Model.FavoriteRaces.Where(r => r.UserId == @UserManager.GetUserAsync(User).Result.Id).Where(r => r.RaceId == Model.Id).Count() > 0)
-    {
-        <p>You have opted into notifications for this race.</p>
-    } else if (SignInManager.IsSignedIn(User))
-        {
-        <a class="btn btn-primary"
-           asp-controller="Races" asp-action="OptInNotification" asp-route-id="@Model.Id">
-            Opt in to Notifications
-        </a>
-        } else
-        {
-            <p>Log in to receive notifications about this race!</p>
-        }
-
-
-
-
-
-
 <div>
-    @if (SignInManager.IsSignedIn(User) && @UserManager.GetUserAsync(User).Result.isAdmin == true)
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-    }
-
     <a asp-action="Index">Back to List</a>
 </div>

@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FairWeatherFriend.Data;
 using FairWeatherFriend.Models;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Microsoft.AspNetCore.Identity;
 
 namespace FairWeatherFriend.Controllers
 {
@@ -14,10 +17,16 @@ namespace FairWeatherFriend.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public RacesController(ApplicationDbContext context)
+
+        private readonly UserManager<ApplicationUser> _userManager;
+        public RacesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Races
         public async Task<IActionResult> Index(string searchQuery)
@@ -68,6 +77,11 @@ namespace FairWeatherFriend.Controllers
             {
                 return NotFound();
             }
+
+            var raceWithOptInUsers = await _context.Race
+        .Include(r => r.FavoriteRaces)
+        .FirstOrDefaultAsync(m => m.Id == id);
+
 
             return View(race);
         }
@@ -143,6 +157,46 @@ namespace FairWeatherFriend.Controllers
                         throw;
                     }
                 }
+
+                if (race.isCancelled == true)
+                {
+                    var raceWithOptInUsers = await _context.Race
+                    .Include(r => r.FavoriteRaces)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
+
+                    List<ApplicationUser> usersToNotify = new List<ApplicationUser>();
+
+                    foreach (FavoriteRaces singleRace in raceWithOptInUsers.FavoriteRaces)
+                    {
+                        singleRace.User = await _context.ApplicationUsers.FindAsync(singleRace.UserId);
+                        usersToNotify.Add(singleRace.User);
+
+                        
+                    }
+
+
+                    foreach (ApplicationUser user in usersToNotify)
+                    {
+                        SMSInformation twilio = new SMSInformation()
+                        {
+                            userPhone = user.PhoneNumber
+                        };
+
+                        string accountSid = twilio.sid;
+                        string authToken = twilio.token;
+
+                        TwilioClient.Init(accountSid, authToken);
+
+                        var message = MessageResource.Create(
+                            body: $"{race.Name} on {race.TimeOfDay} has been cancelled.",
+                            from: new Twilio.Types.PhoneNumber(twilio.phone),
+                            to: new Twilio.Types.PhoneNumber(twilio.userPhone)
+
+                    );
+                    }
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["RaceTrackId"] = new SelectList(_context.RaceTrack, "Id", "Location", race.RaceTrackId);
@@ -177,6 +231,32 @@ namespace FairWeatherFriend.Controllers
             _context.Race.Remove(race);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> OptInNotification(int id)
+        {
+            var race = await _context.Race
+                .Include(r => r.Track)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var user = await GetCurrentUserAsync();
+
+            FavoriteRaces favoriteRace = new FavoriteRaces()
+            {
+                UserId = user.Id,
+                RaceId = id
+            };
+
+            _context.Update(favoriteRace);
+            await _context.SaveChangesAsync();
+
+            return View(race);
+
+
+
+
+            
+
         }
 
         private bool RaceExists(int id)
