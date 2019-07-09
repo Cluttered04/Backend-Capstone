@@ -25,5 +25,6 @@ namespace FairWeatherFriend.Models
         public int RaceTrackId { get; set; }
         public RaceTrack Track { get; set; }
         public List<FavoriteRaces> FavoriteRaces { get; set; } = new List<FavoriteRaces>();
+        public List<ParticipatingDriver> ParticipatingDrivers { get; set; } = new List<ParticipatingDriver>();
     }
 }

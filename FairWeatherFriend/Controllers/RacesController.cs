@@ -61,6 +61,25 @@ namespace FairWeatherFriend.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        public async Task<IActionResult> DriverIndex(string searchQuery)
+        {
+            var applicationDbContext = await _context.ApplicationUsers.ToListAsync();
+
+            if (searchQuery != null)
+            {
+                string normalizedSearchQuery = searchQuery.ToLower();
+                applicationDbContext = applicationDbContext.Where(r => r.FirstName.ToLower().Contains(normalizedSearchQuery) || r.LastName.ToLower().Contains(normalizedSearchQuery)).ToList();
+
+
+
+            }
+
+            applicationDbContext = applicationDbContext.OrderBy(r => r.LastName).ToList();
+            return View(applicationDbContext);
+
+
+        }
+
         // GET: Races/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -80,6 +99,10 @@ namespace FairWeatherFriend.Controllers
             var raceWithOptInUsers = await _context.Race
         .Include(r => r.FavoriteRaces)
         .FirstOrDefaultAsync(m => m.Id == id);
+
+
+            
+            
 
 
             return View(race);
@@ -224,10 +247,21 @@ namespace FairWeatherFriend.Controllers
 
         }
 
+        public async Task<IActionResult> CancelAttendance(int id)
+        {
+            var race = await _context.Race.FirstOrDefaultAsync(p => p.Id == id);
 
+            var user = await GetCurrentUserAsync();
+            var participatingDriver = await _context.ParticipatingDriver.FirstOrDefaultAsync(p => p.RaceId == id && p.UserId == user.Id);
 
-        // GET: Races/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+            _context.ParticipatingDriver.Remove(participatingDriver);
+            await _context.SaveChangesAsync();
+            return View(race);
+
+        }
+
+            // GET: Races/Delete/5
+            public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
