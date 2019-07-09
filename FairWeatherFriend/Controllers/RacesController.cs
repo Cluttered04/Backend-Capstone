@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FairWeatherFriend.Data;
 using FairWeatherFriend.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace FairWeatherFriend.Controllers
 {
@@ -14,10 +15,15 @@ namespace FairWeatherFriend.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public RacesController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public RacesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Races
         public async Task<IActionResult> Index(string searchQuery)
@@ -149,6 +155,30 @@ namespace FairWeatherFriend.Controllers
             return View(race);
         }
 
+
+        public async Task<IActionResult> SignUp(int id)
+        {
+            var race = await _context.Race.FirstOrDefaultAsync(p => p.Id == id);
+
+            var user = await GetCurrentUserAsync();
+            ParticipatingDriver participatingDriver = new ParticipatingDriver()
+            {
+                RaceId = id,
+                UserId = user.Id
+            };
+
+            _context.Add(participatingDriver);
+            await _context.SaveChangesAsync();
+
+            return View(race);
+
+
+
+
+        }
+
+
+
         // GET: Races/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -173,6 +203,7 @@ namespace FairWeatherFriend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+           
             var race = await _context.Race.FindAsync(id);
             _context.Race.Remove(race);
             await _context.SaveChangesAsync();
@@ -184,4 +215,7 @@ namespace FairWeatherFriend.Controllers
             return _context.Race.Any(e => e.Id == id);
         }
     }
+
+
+
 }

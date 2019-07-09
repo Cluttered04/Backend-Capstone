@@ -153,5 +153,9 @@
         <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
     }
 
+    @if (SignInManager.IsSignedIn(User) && @UserManager.GetUserAsync(User).Result.CarNumber != null)
+    {
+        <a asp-action="SignUp" asp-route-id="@Model.Id">Attending</a>
+    }
     <a asp-action="Index">Back to List</a>
 </div>
