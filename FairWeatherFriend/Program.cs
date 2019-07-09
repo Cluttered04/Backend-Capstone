@@ -7,6 +7,9 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace FairWeatherFriend
 {
@@ -15,10 +18,13 @@ namespace FairWeatherFriend
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
+
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>();
+
+
     }
 }

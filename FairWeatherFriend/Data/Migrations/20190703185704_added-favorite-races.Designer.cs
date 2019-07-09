@@ -4,14 +4,16 @@ using FairWeatherFriend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FairWeatherFriend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190703185704_added-favorite-races")]
+    partial class addedfavoriteraces
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,13 +29,15 @@ namespace FairWeatherFriend.Data.Migrations
 
                     b.Property<int>("RaceId");
 
-                    b.Property<string>("UserId");
+                    b.Property<int>("UserId");
+
+                    b.Property<string>("UserId1");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RaceId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("FavoriteRaces");
                 });
@@ -260,9 +264,6 @@ namespace FairWeatherFriend.Data.Migrations
 
                     b.Property<string>("CarNumber");
 
-                    b.Property<string>("FirstName");
-
-                    b.Property<string>("LastName");
                     b.Property<string>("Phone");
 
                     b.Property<bool>("isAdmin");
@@ -279,7 +280,7 @@ namespace FairWeatherFriend.Data.Migrations
 
                     b.HasOne("FairWeatherFriend.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("FairWeatherFriend.Models.Race", b =>

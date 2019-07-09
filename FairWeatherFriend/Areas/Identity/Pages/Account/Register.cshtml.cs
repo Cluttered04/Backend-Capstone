@@ -56,6 +56,10 @@ namespace FairWeatherFriend.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+
+            [Display(Name = "Phone Number")]
+            public string PhoneNumber { get; set; }
+
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
@@ -78,7 +82,8 @@ namespace FairWeatherFriend.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { isAdmin = Input.isAdmin, CarNumber = Input.CarNumber, UserName = Input.Email, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName}; ;
+                var user = new ApplicationUser { isAdmin = Input.isAdmin, CarNumber = Input.CarNumber, UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber, FirstName = Input.FirstName, LastName = Input.LastName}; ;
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

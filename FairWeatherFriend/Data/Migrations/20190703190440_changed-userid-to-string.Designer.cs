@@ -4,14 +4,16 @@ using FairWeatherFriend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FairWeatherFriend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190703190440_changed-userid-to-string")]
+    partial class changeduseridtostring
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,9 +262,6 @@ namespace FairWeatherFriend.Data.Migrations
 
                     b.Property<string>("CarNumber");
 
-                    b.Property<string>("FirstName");
-
-                    b.Property<string>("LastName");
                     b.Property<string>("Phone");
 
                     b.Property<bool>("isAdmin");

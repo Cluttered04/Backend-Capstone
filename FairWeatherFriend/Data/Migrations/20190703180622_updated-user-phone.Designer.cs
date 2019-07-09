@@ -4,39 +4,22 @@ using FairWeatherFriend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FairWeatherFriend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190703180622_updated-user-phone")]
+    partial class updateduserphone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("FairWeatherFriend.Models.FavoriteRaces", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("RaceId");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RaceId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("FavoriteRaces");
-                });
 
             modelBuilder.Entity("FairWeatherFriend.Models.Race", b =>
                 {
@@ -260,26 +243,11 @@ namespace FairWeatherFriend.Data.Migrations
 
                     b.Property<string>("CarNumber");
 
-                    b.Property<string>("FirstName");
-
-                    b.Property<string>("LastName");
                     b.Property<string>("Phone");
 
                     b.Property<bool>("isAdmin");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
-                });
-
-            modelBuilder.Entity("FairWeatherFriend.Models.FavoriteRaces", b =>
-                {
-                    b.HasOne("FairWeatherFriend.Models.Race", "Race")
-                        .WithMany("FavoriteRaces")
-                        .HasForeignKey("RaceId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("FairWeatherFriend.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("FairWeatherFriend.Models.Race", b =>
