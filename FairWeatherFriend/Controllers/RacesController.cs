@@ -101,10 +101,6 @@ namespace FairWeatherFriend.Controllers
         .FirstOrDefaultAsync(m => m.Id == id);
 
 
-            
-            
-
-
             return View(race);
         }
 
