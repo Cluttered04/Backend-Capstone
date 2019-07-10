@@ -78,6 +78,10 @@ namespace FairWeatherFriend.Controllers
             return View(applicationDbContext);
 
 
+
+
+
+
         }
 
         public async Task<IActionResult> DriverDetails(string id)
@@ -97,7 +101,7 @@ namespace FairWeatherFriend.Controllers
                 return NotFound();
             }
 
-
+            
 
             return View(driver);
         }

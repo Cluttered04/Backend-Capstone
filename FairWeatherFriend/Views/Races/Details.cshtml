@@ -174,12 +174,12 @@
         <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
     }
 
-    @if (SignInManager.IsSignedIn(User) && Model.ParticipatingDrivers.Where(r => r.UserId == @UserManager.GetUserAsync(User).Result.Id).Where(r => r.RaceId == Model.Id).Count() > 0)
+    @if (SignInManager.IsSignedIn(User) && Model.ParticipatingDrivers.Where(r => r.UserId == @UserManager.GetUserAsync(User).Result.Id).Where(r => r.RaceId == Model.Id).Count() > 0 && DateTime.Compare(Model.TimeOfDay, DateTime.Now) > 0)
     {
         <h5>You have confirmed your attendance for this race</h5>
         <a class="btn btn-primary" asp-action="CancelAttendance" asp-route-id="@Model.Id">Cancel Attendance</a>
 
-    } else if (SignInManager.IsSignedIn(User) && @UserManager.GetUserAsync(User).Result.CarNumber != null)
+    } else if (SignInManager.IsSignedIn(User) && @UserManager.GetUserAsync(User).Result.CarNumber != null && DateTime.Compare(Model.TimeOfDay, DateTime.Now) > 0)
     {
         <a class="btn btn-primary" asp-action="SignUp" asp-route-id="@Model.Id">Attending</a>
     }

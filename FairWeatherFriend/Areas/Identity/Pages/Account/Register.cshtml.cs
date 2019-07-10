@@ -40,9 +40,11 @@ namespace FairWeatherFriend.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Required]
             [Display(Name = "First Name")]
             public string FirstName { get; set; }
 
+            [Required]
             [Display(Name = "Last Name")]
             public string LastName { get; set; }
 
