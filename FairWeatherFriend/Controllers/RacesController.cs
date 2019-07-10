@@ -111,7 +111,7 @@ namespace FairWeatherFriend.Controllers
             }
 
             var race = await _context.Race
-                .Include(r => r.Track)
+                .Include(r => r.Track).Include(r => r.ParticipatingDrivers)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (race == null)
             {
