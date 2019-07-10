@@ -12,6 +12,7 @@ namespace FairWeatherFriend.Models
         [Required]
         public string Location { get; set; }
         [Required]
+        [Display(Name = "Track Name")]
         public string Name { get; set; }
         [Required]
         public int ZipCode { get; set; }

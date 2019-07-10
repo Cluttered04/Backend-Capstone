@@ -63,7 +63,7 @@ namespace FairWeatherFriend.Controllers
 
         public async Task<IActionResult> DriverIndex(string searchQuery)
         {
-            var applicationDbContext = await _context.ApplicationUsers.ToListAsync();
+            var applicationDbContext = await _context.ApplicationUsers.Where(r => r.CarNumber != null).ToListAsync();
 
             if (searchQuery != null)
             {
@@ -78,6 +78,28 @@ namespace FairWeatherFriend.Controllers
             return View(applicationDbContext);
 
 
+        }
+
+        public async Task<IActionResult> DriverDetails(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var driver = await _context.ApplicationUsers.Include(r => r.ParticipatingDrivers).ThenInclude(r => r.race).ThenInclude(r => r.Track)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            
+
+            if (driver == null)
+            {
+                return NotFound();
+            }
+
+
+
+            return View(driver);
         }
 
         // GET: Races/Details/5

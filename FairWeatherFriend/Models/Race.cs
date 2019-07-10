@@ -19,6 +19,7 @@ namespace FairWeatherFriend.Models
         [Display(Name = "Cancelled")]
         public bool isCancelled { get; set; }
         public int Prize { get; set; }
+        [Display(Name = "Race Name")]
         public string Name { get; set; }
         public int Laps { get; set; }
         [Required]
