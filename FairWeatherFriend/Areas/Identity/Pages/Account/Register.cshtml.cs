@@ -60,6 +60,7 @@ namespace FairWeatherFriend.Areas.Identity.Pages.Account
 
 
             [Display(Name = "Phone Number")]
+            [Required]
             public string PhoneNumber { get; set; }
 
             [Required]

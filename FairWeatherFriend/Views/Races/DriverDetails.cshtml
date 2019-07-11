@@ -30,10 +30,9 @@
 </div>
 <dl>
     <h5>Upcoming Races</h5>
-
-    @foreach (ParticipatingDriver entry in Model.ParticipatingDrivers)
+    @foreach (ParticipatingDriver entry in Model.ParticipatingDrivers.OrderBy(r => r.race.TimeOfDay))
     {
-        @if (DateTime.Compare(entry.race.TimeOfDay, DateTime.Now) > 0)
+        @if(DateTime.Compare(entry.race.TimeOfDay, DateTime.Now) > 0)
         {
             <h6>Race</h6>
             <dt class="col-sm-2">
@@ -62,9 +61,39 @@
             </dd>
         }
 
-
     }
-
+    <h5>Past Races</h5>
+    @foreach (ParticipatingDriver entry in Model.ParticipatingDrivers.OrderByDescending(r => r.race.TimeOfDay))
+    {
+        @if (DateTime.Compare(entry.race.TimeOfDay, DateTime.Now) < 0)
+        {
+            <h6>Race</h6>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(ModelItem => entry.race.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(ModelItem => entry.race.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(ModelItem => entry.race.Track.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(ModelItem => entry.race.Track.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(ModelItem => entry.race.Track.Location)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(ModelItem => entry.race.Track.Location)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(ModelItem => entry.race.TimeOfDay)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(ModelItem => entry.race.TimeOfDay)
+            </dd>
+        }
+    }
     <div>
         <a asp-action="DriverIndex">Back to List</a>
     </div>
