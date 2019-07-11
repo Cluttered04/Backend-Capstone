@@ -1,0 +1,60 @@
+﻿@model FairWeatherFriend.Models.Race
+
+@{
+    ViewData["Title"] = "CancelAttendance";
+}
+
+<h3>You have cancelled your attendance for this event.</h3>
+
+
+<div>
+    <h4>Race</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TimeOfDay)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TimeOfDay)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DateOnly)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DateOnly)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.isCancelled)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.isCancelled)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Prize)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Prize)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Laps)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Laps)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Track)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Track.Location)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -40,6 +40,14 @@ namespace FairWeatherFriend.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Required]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
             [Display(Name = "Car Number")]
             public string CarNumber { get; set; }
 
@@ -50,8 +58,9 @@ namespace FairWeatherFriend.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            
+
             [Display(Name = "Phone Number")]
+            [Required]
             public string PhoneNumber { get; set; }
 
             [Required]
@@ -76,7 +85,8 @@ namespace FairWeatherFriend.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { isAdmin = Input.isAdmin, CarNumber = Input.CarNumber, PhoneNumber = Input.PhoneNumber, UserName = Input.Email, Email = Input.Email }; 
+                var user = new ApplicationUser { isAdmin = Input.isAdmin, CarNumber = Input.CarNumber, UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber, FirstName = Input.FirstName, LastName = Input.LastName}; ;
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

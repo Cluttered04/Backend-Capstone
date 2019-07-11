@@ -14,6 +14,9 @@ namespace FairWeatherFriend.Models
         public string CarNumber { get; set; }
 
         public bool isAdmin { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public List<ParticipatingDriver> ParticipatingDrivers { get; set; } = new List<ParticipatingDriver>();
 
 
         // Set up PK -> FK relationships to other objects

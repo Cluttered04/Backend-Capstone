@@ -4,14 +4,16 @@ using FairWeatherFriend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FairWeatherFriend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190709145343_fixed-model")]
+    partial class fixedmodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,32 +40,11 @@ namespace FairWeatherFriend.Data.Migrations
                     b.ToTable("FavoriteRaces");
                 });
 
-            modelBuilder.Entity("FairWeatherFriend.Models.ParticipatingDriver", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("RaceId");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RaceId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ParticipatingDriver");
-                });
-
             modelBuilder.Entity("FairWeatherFriend.Models.Race", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserId");
 
                     b.Property<string>("DateOnly");
 
@@ -80,8 +61,6 @@ namespace FairWeatherFriend.Data.Migrations
                     b.Property<bool>("isCancelled");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("RaceTrackId");
 
@@ -304,24 +283,8 @@ namespace FairWeatherFriend.Data.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("FairWeatherFriend.Models.ParticipatingDriver", b =>
-                {
-                    b.HasOne("FairWeatherFriend.Models.Race", "race")
-                        .WithMany("ParticipatingDrivers")
-                        .HasForeignKey("RaceId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("FairWeatherFriend.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("FairWeatherFriend.Models.Race", b =>
                 {
-                    b.HasOne("FairWeatherFriend.Models.ApplicationUser")
-                        .WithMany("Races")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("FairWeatherFriend.Models.RaceTrack", "Track")
                         .WithMany("Races")
                         .HasForeignKey("RaceTrackId")

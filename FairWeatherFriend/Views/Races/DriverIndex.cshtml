@@ -1,0 +1,47 @@
+﻿@model IEnumerable<FairWeatherFriend.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "DriverIndex";
+}
+
+<h1>Drivers</h1>
+
+<form asp-action="DriverIndex">
+    <input type="text" name="searchQuery" />
+    <button type="submit">Search by Driver Name</button>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CarNumber)
+            </th>
+            
+            <th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CarNumber)
+            </td>
+            <td>
+                <a asp-action="DriverDetails" asp-route-id="@item.Id">Details</a> 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

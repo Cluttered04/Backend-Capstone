@@ -17,7 +17,6 @@ namespace FairWeatherFriend.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-
         private readonly UserManager<ApplicationUser> _userManager;
         public RacesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
@@ -38,7 +37,7 @@ namespace FairWeatherFriend.Controllers
             {
                 string normalizedSearchQuery = searchQuery.ToLower();
                 applicationDbContext = applicationDbContext.Where(r => r.Track.Name.ToLower().Contains(normalizedSearchQuery));
-                
+
             }
 
             applicationDbContext = applicationDbContext.OrderBy(r => r.TimeOfDay);
@@ -56,10 +55,55 @@ namespace FairWeatherFriend.Controllers
                 string normalizedSearchQuery = searchQuery.ToLower();
                 applicationDbContext = applicationDbContext.Where(r => r.Track.Name.ToLower().Contains(normalizedSearchQuery));
 
-            } 
+            }
 
             applicationDbContext = applicationDbContext.OrderByDescending(r => r.TimeOfDay);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> DriverIndex(string searchQuery)
+        {
+            var applicationDbContext = await _context.ApplicationUsers.Where(r => r.CarNumber != null).ToListAsync();
+
+            if (searchQuery != null)
+            {
+                string normalizedSearchQuery = searchQuery.ToLower();
+                applicationDbContext = applicationDbContext.Where(r => r.FirstName.ToLower().Contains(normalizedSearchQuery) || r.LastName.ToLower().Contains(normalizedSearchQuery)).ToList();
+
+
+
+            }
+
+            applicationDbContext = applicationDbContext.OrderBy(r => r.LastName).ToList();
+            return View(applicationDbContext);
+
+
+
+
+
+
+        }
+
+        public async Task<IActionResult> DriverDetails(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var driver = await _context.ApplicationUsers.Include(r => r.ParticipatingDrivers).ThenInclude(r => r.race).ThenInclude(r => r.Track)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            
+
+            if (driver == null)
+            {
+                return NotFound();
+            }
+
+            
+
+            return View(driver);
         }
 
         // GET: Races/Details/5
@@ -71,7 +115,7 @@ namespace FairWeatherFriend.Controllers
             }
 
             var race = await _context.Race
-                .Include(r => r.Track)
+                .Include(r => r.Track).Include(r => r.ParticipatingDrivers)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (race == null)
             {
@@ -94,7 +138,7 @@ namespace FairWeatherFriend.Controllers
         }
 
         // POST: Races/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -128,7 +172,7 @@ namespace FairWeatherFriend.Controllers
         }
 
         // POST: Races/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -172,7 +216,7 @@ namespace FairWeatherFriend.Controllers
                         singleRace.User = await _context.ApplicationUsers.FindAsync(singleRace.UserId);
                         usersToNotify.Add(singleRace.User);
 
-                        
+
                     }
 
 
@@ -203,8 +247,43 @@ namespace FairWeatherFriend.Controllers
             return View(race);
         }
 
-        // GET: Races/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+
+        public async Task<IActionResult> SignUp(int id)
+        {
+            var race = await _context.Race.FirstOrDefaultAsync(p => p.Id == id);
+
+            var user = await GetCurrentUserAsync();
+            ParticipatingDriver participatingDriver = new ParticipatingDriver()
+            {
+                RaceId = id,
+                UserId = user.Id
+            };
+
+            _context.Add(participatingDriver);
+            await _context.SaveChangesAsync();
+
+            return View(race);
+
+
+
+
+        }
+
+        public async Task<IActionResult> CancelAttendance(int id)
+        {
+            var race = await _context.Race.FirstOrDefaultAsync(p => p.Id == id);
+
+            var user = await GetCurrentUserAsync();
+            var participatingDriver = await _context.ParticipatingDriver.FirstOrDefaultAsync(p => p.RaceId == id && p.UserId == user.Id);
+
+            _context.ParticipatingDriver.Remove(participatingDriver);
+            await _context.SaveChangesAsync();
+            return View(race);
+
+        }
+
+            // GET: Races/Delete/5
+            public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -227,6 +306,7 @@ namespace FairWeatherFriend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+
             var race = await _context.Race.FindAsync(id);
             _context.Race.Remove(race);
             await _context.SaveChangesAsync();
@@ -255,7 +335,7 @@ namespace FairWeatherFriend.Controllers
 
 
 
-            
+
 
         }
 
@@ -264,4 +344,7 @@ namespace FairWeatherFriend.Controllers
             return _context.Race.Any(e => e.Id == id);
         }
     }
+
+
+
 }
