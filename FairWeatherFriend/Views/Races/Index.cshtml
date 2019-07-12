@@ -10,7 +10,7 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<h1>Index</h1>
+<h1>Races</h1>
 
 @if (SignInManager.IsSignedIn(User) && @UserManager.GetUserAsync(User).Result.isAdmin == true)
 {
@@ -23,7 +23,7 @@
     <input type="text" name="searchQuery" />
     <button type="submit">Search by Track Name</button>
 </form>
-<table class="table">
+<table class="table table-borderless table-condensed table-hover">
     <thead>
         <tr>
             <th>
@@ -50,19 +50,9 @@
         @foreach (var item in Model)
         {
         <tr>
-            @if(item.isCancelled == true)
-            {
-            <td class="Cancelled">
+            <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            } else
-            {
-        <td>
-                @Html.DisplayFor(modelItem => item.Name)
-        </td>
-            }
-
-            
             <td>
                 @Html.DisplayFor(modelItem => item.Laps)
             </td>
@@ -75,6 +65,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Track.Name)
             </td>
+
             @if (item.isCancelled == true)
             {
 
