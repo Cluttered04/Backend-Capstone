@@ -14,7 +14,9 @@ namespace FairWeatherFriend.Models
         public string CarNumber { get; set; }
 
         public bool isAdmin { get; set; }
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
         public List<ParticipatingDriver> ParticipatingDrivers { get; set; } = new List<ParticipatingDriver>();
 
