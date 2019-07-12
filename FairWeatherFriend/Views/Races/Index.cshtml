@@ -10,7 +10,7 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<h1>Index</h1>
+<h1>Races</h1>
 
 @if (SignInManager.IsSignedIn(User) && @UserManager.GetUserAsync(User).Result.isAdmin == true)
 {
