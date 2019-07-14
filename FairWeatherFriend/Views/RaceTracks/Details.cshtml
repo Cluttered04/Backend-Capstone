@@ -44,6 +44,7 @@
         {
             @if (DateTime.Compare(UpcomingRace.TimeOfDay, DateTime.Now) > 0)
             {
+                <h6>Race</h6>
                 <dt class="col-sm-2">
                     @Html.DisplayNameFor(ModelItem => UpcomingRace.Name)
                 </dt>

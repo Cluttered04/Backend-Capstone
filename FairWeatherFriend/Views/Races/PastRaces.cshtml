@@ -10,7 +10,7 @@
     <input type="text" name="searchQuery" />
     <button type="submit">Search by Track Name</button>
 </form>
-<table class="table">
+<table class="table table-borderless table-condensed table-hover">
     <thead>
         <tr>
             <th>
@@ -36,52 +36,41 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                @if (item.isCancelled == true)
-                {
-                    <td class="Cancelled">
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                }
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Laps)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeOfDay)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Prize)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Track.Name)
+            </td>
+            @if (item.isCancelled == true)
+            {
 
+                <td class="btn-outline-danger">
+                    Cancelled
+                </td>
+            }
+            else
+            {
+                <td>
+                    Race Complete
+                </td>
+            }
+            <td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.Laps)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TimeOfDay)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Prize)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Track.Name)
-                </td>
-                @if (item.isCancelled == true)
-                {
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
 
-                    <td class="Cancelled">
-                        Cancelled
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        Race Complete
-                    </td>
-                }
-                <td>
-
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-
-                </td>
-            </tr>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
