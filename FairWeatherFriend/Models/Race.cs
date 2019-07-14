@@ -16,7 +16,7 @@ namespace FairWeatherFriend.Models
             {
                 return TimeOfDay.ToShortDateString().ToString();
             } set { } }
-        [Display(Name = "Cancelled")]
+        [Display(Name = "Status")]
         public bool isCancelled { get; set; }
         public int Prize { get; set; }
         [Display(Name = "Race Name")]
