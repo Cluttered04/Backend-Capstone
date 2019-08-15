@@ -4,7 +4,14 @@
     ViewData["Title"] = "Driver";
 }
 
+@using Microsoft.AspNetCore.Identity
+@using FairWeatherFriend.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
 <h1>Driver Details</h1>
+
 
 <div>
     <dl class="row">
@@ -32,7 +39,7 @@
     <h5>Upcoming Races</h5>
     @foreach (ParticipatingDriver entry in Model.ParticipatingDrivers.OrderBy(r => r.race.TimeOfDay))
     {
-        @if(DateTime.Compare(entry.race.TimeOfDay, DateTime.Now) > 0)
+        @if (DateTime.Compare(entry.race.TimeOfDay, DateTime.Now) > 0)
         {
             <h6>Race</h6>
             <dt class="col-sm-2">
@@ -94,6 +101,16 @@
             </dd>
         }
     }
-    <div>
-        <a asp-action="DriverIndex">Back to List</a>
-    </div>
+<div>
+    @if (SignInManager.IsSignedIn(User) && Model.FavoriteDrivers != null && Model.FavoriteDrivers.Where(r => r.UserId == @UserManager.GetUserAsync(User).Result.Id).Where(r => r.DriverId == Model.Id).Count() > 0)
+    {
+        <a class="btn btn-primary" asp-action="UnFavoriteDriver" asp-route-id="@Model.Id">Stop following driver.</a>
+    }
+    else if (SignInManager.IsSignedIn(User))
+    {
+        <a class="btn btn-primary" asp-action="FavoriteDriver" asp-route-id="@Model.Id">Favorite Driver</a>
+
+    }
+
+    <a asp-action="DriverIndex">Back to List</a>
+</div>

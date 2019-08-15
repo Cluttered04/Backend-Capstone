@@ -20,8 +20,8 @@ namespace FairWeatherFriend.Models
         public string LastName { get; set; }
         public List<ParticipatingDriver> ParticipatingDrivers { get; set; } = new List<ParticipatingDriver>();
 
+        public List<FavoriteDrivers> FavoriteDrivers { get; set; } 
 
-        // Set up PK -> FK relationships to other objects
 
     }
 }

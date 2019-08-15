@@ -91,10 +91,10 @@ namespace FairWeatherFriend.Controllers
                 return NotFound();
             }
 
+            var user = GetCurrentUserAsync();
+
             var driver = await _context.ApplicationUsers.Include(r => r.ParticipatingDrivers).ThenInclude(r => r.race).ThenInclude(r => r.Track)
                 .FirstOrDefaultAsync(m => m.Id == id);
-
-            
 
             if (driver == null)
             {
@@ -332,11 +332,42 @@ namespace FairWeatherFriend.Controllers
 
             return View(race);
 
+        }
 
+        public async Task<IActionResult> FavoriteDriver(string id)
+        {
+            var driver = await _context.ApplicationUsers
+                .FirstOrDefaultAsync(m => m.Id == id);
 
+            var user = await GetCurrentUserAsync();
 
+            
 
+            FavoriteDrivers favoriteDriver = new FavoriteDrivers()
+            {
+                UserId = user.Id,
+                DriverId = id
+            };
 
+            _context.Update(favoriteDriver);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(DriverIndex));
+        }
+
+        public async Task<IActionResult> UnFavoriteDriver(string id)
+        {
+            var driver = await _context.ApplicationUsers
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var user = await GetCurrentUserAsync();
+
+            var favoriteDriver = await _context.FavoriteDrivers
+                .FirstOrDefaultAsync(m => m.DriverId == id && m.UserId == user.Id);
+
+            _context.FavoriteDrivers.Remove(favoriteDriver);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(DriverIndex));
         }
 
         private bool RaceExists(int id)

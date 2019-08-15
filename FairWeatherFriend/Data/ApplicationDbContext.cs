@@ -19,5 +19,7 @@ namespace FairWeatherFriend.Data
         public DbSet<FairWeatherFriend.Models.Race> Race { get; set; }
         public DbSet<FairWeatherFriend.Models.FavoriteRaces> FavoriteRaces { get; set; }
         public DbSet<FairWeatherFriend.Models.ParticipatingDriver> ParticipatingDriver { get; set; }
+
+        public DbSet<FairWeatherFriend.Models.FavoriteDrivers> FavoriteDrivers { get; set; }
     }
 }
